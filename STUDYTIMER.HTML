@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Study Timer</title>
+    <style>
+        body { font-family: Arial; text-align: center; margin-top: 50px; }
+        #timer { font-size: 48px; margin: 20px; }
+        input, button { padding: 10px; margin: 5px; }
+        ul { list-style: none; padding: 0; }
+    </style>
+</head>
+<body>
+
+<h1>Simple Study Timer</h1>
+
+<div id="timer">00:00</div>
+<button onclick="startTimer()">Start Study Timer</button>
+
+<h2>Add Task</h2>
+<input type="text" id="taskInput" placeholder="Enter task">
+<button onclick="addTask()">Add Task</button>
+
+<ul id="taskList"></ul>
+
+<button onclick="showSummary()">Show Summary</button>
+
+<script>
+    let studyMinutes = 25; // Pomodoro duration
+    let totalStudyTime = 0;
+    let tasksDone = [];
+    let timerInterval;
+
+    function startTimer() {
+        let sec = studyMinutes * 60;
+        clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+            let minutes = Math.floor(sec / 60);
+            let seconds = sec % 60;
+            document.getElementById('timer').innerText = 
+                `${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
+            sec--;
+            if (sec < 0) {
+                clearInterval(timerInterval);
+                totalStudyTime += studyMinutes;
+                alert("Study session completed! Take a break.");
+            }
+        }, 1000);
+    }
+
+    function addTask() {
+        let taskInput = document.getElementById('taskInput');
+        let task = taskInput.value.trim();
+        if(task) {
+            tasksDone.push(task);
+            let li = document.createElement('li');
+            li.textContent = task;
+            document.getElementById('taskList').appendChild(li);
+            taskInput.value = '';
+        }
+    }
+
+    function showSummary() {
+        let focusScore = tasksDone.length > 0 ? Math.floor(totalStudyTime / (tasksDone.length * studyMinutes) * 100) : 100;
+        alert(`Total Study Time: ${totalStudyTime} minutes\nTasks Done: ${tasksDone.length}\nFocus Score: ${focusScore}%`);
+    }
+</script>
+<h3>-made by brett</h3>
+
+</body>
+</html>
